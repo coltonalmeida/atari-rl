@@ -14,7 +14,7 @@ from stable_baselines3.common.vec_env import SubprocVecEnv, VecFrameStack, VecTr
 
 gym.register_envs(ale_py)
 
-ENV_ID = "ALE/Asteroids-v5"
+ENV_ID = "ALE/SpaceInvaders-v5"
 
 
 def make_env(

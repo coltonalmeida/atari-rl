@@ -1,8 +1,8 @@
 """Config-driven training entry point. Every run is driven by a Hydra config.
 
 Usage:
-    python -m asteroids_rl.train --config-name=ppo
-    python -m asteroids_rl.train --config-name=dqn total_timesteps=10000 wandb.enabled=false
+    python -m atari_rl.train --config-name=ppo
+    python -m atari_rl.train --config-name=dqn total_timesteps=10000 wandb.enabled=false
 """
 
 from __future__ import annotations
@@ -14,8 +14,8 @@ import hydra
 from omegaconf import DictConfig, OmegaConf
 from stable_baselines3 import DQN, PPO
 
-from asteroids_rl.callbacks import build_callbacks
-from asteroids_rl.env import make_env
+from atari_rl.callbacks import build_callbacks
+from atari_rl.env import make_env
 
 ALGOS = {"ppo": PPO, "dqn": DQN}
 

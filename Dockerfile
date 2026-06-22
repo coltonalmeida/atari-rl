@@ -13,4 +13,4 @@ RUN uv pip install --system .
 
 COPY tests ./tests
 
-CMD ["python", "-m", "asteroids_rl.train", "--config", "configs/ppo.yaml"]
+CMD ["python", "-m", "atari_rl.train", "--config", "configs/ppo.yaml"]

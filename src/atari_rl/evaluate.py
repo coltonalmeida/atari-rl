@@ -1,8 +1,8 @@
 """Evaluate a trained model or a random-action baseline over N episodes.
 
 Usage:
-    python -m asteroids_rl.evaluate --random --episodes 30 --out reports/random_baseline.json
-    python -m asteroids_rl.evaluate --model models/ppo_best/best_model.zip --episodes 30
+    python -m atari_rl.evaluate --random --episodes 30 --out reports/random_baseline.json
+    python -m atari_rl.evaluate --model models/ppo_best/best_model.zip --episodes 30
 """
 
 from __future__ import annotations
@@ -13,7 +13,7 @@ from pathlib import Path
 
 import numpy as np
 
-from asteroids_rl.env import ENV_ID, make_env
+from atari_rl.env import ENV_ID, make_env
 
 DEFAULT_BASELINE = "reports/random_baseline.json"
 
@@ -47,7 +47,7 @@ def run_random_baseline(env_id: str, episodes: int, seed: int = 42) -> tuple[flo
 def run_model(model_path: str, env_id: str, episodes: int, seed: int = 42) -> tuple[float, float]:
     from stable_baselines3.common.evaluation import evaluate_policy
 
-    from asteroids_rl.train import load_model
+    from atari_rl.train import load_model
 
     env = make_env(env_id, n_envs=1, seed=seed, eval_mode=True)
     model = load_model(model_path, env)

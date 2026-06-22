@@ -1,6 +1,6 @@
-# PPO on ALE/Asteroids-v5 — SB3 Atari defaults
+# PPO on ALE/SpaceInvaders-v5 — SB3 Atari defaults
 algo: ppo
-env_id: ALE/Asteroids-v5
+env_id: ALE/SpaceInvaders-v5
 seed: 42
 total_timesteps: 1_000_000  # validate the loop at 1M, then scale to 10M
 
@@ -24,5 +24,5 @@ eval:
 checkpoint_freq: 100_000
 
 wandb:
-  project: asteroids-rl
+  project: atari-rl
   enabled: true

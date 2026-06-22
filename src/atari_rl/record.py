@@ -1,9 +1,9 @@
 """Record a gameplay video of a trained agent, optionally uploading it to W&B.
 
 Usage:
-    python -m asteroids_rl.record --model models/ppo_best/best_model.zip
-    python -m asteroids_rl.record --model checkpoints/ppo_500000_steps.zip \\
-        --step 500000 --wandb --wandb-project asteroids-rl
+    python -m atari_rl.record --model models/ppo_best/best_model.zip
+    python -m atari_rl.record --model checkpoints/ppo_500000_steps.zip \\
+        --step 500000 --wandb --wandb-project atari-rl
 """
 
 from __future__ import annotations
@@ -19,8 +19,8 @@ from gymnasium.wrappers import RecordVideo
 from stable_baselines3.common.atari_wrappers import AtariWrapper
 from stable_baselines3.common.vec_env import DummyVecEnv, VecFrameStack, VecTransposeImage
 
-from asteroids_rl.env import ENV_ID
-from asteroids_rl.train import load_model
+from atari_rl.env import ENV_ID
+from atari_rl.train import load_model
 
 
 def _make_recorded_env(env_id: str, out_dir: str, episodes: int):
@@ -28,9 +28,9 @@ def _make_recorded_env(env_id: str, out_dir: str, episodes: int):
     so the model sees the same observations as during training.
 
     The visual env runs with frameskip=1 so RecordVideo captures *every* emulator frame.
-    Atari games (Asteroids especially) draw some sprites on alternating frames; sampling
-    only one frame per skip lands on a single flicker phase, so those sprites never make
-    it into the video. Capturing every frame keeps both phases (see deflicker()).
+    Atari games (Space Invaders, Asteroids, …) draw some sprites on alternating frames;
+    sampling only one frame per skip lands on a single flicker phase, so those sprites never
+    make it into the video. Capturing every frame keeps every phase (see deflicker()).
     AtariWrapper(skip=4) still gives the model the correct max-pooled observations.
 
     terminal_on_life_loss is disabled so the recording shows a full multi-life game
@@ -44,7 +44,7 @@ def _make_recorded_env(env_id: str, out_dir: str, episodes: int):
             env = gym.make(env_id, render_mode="rgb_array", frameskip=1)
         except (TypeError, ValueError, gym.error.Error):
             # Some env ids reject a frameskip override; fall back to the no-frameskip ROM.
-            env = gym.make("AsteroidsNoFrameskip-v4", render_mode="rgb_array")
+            env = gym.make("SpaceInvadersNoFrameskip-v4", render_mode="rgb_array")
         env = RecordVideo(env, video_folder=out_dir, episode_trigger=lambda ep: ep < episodes)
         return AtariWrapper(env, terminal_on_life_loss=False)
 
@@ -52,13 +52,19 @@ def _make_recorded_env(env_id: str, out_dir: str, episodes: int):
 
 
 def deflicker(video_path: Path) -> None:
-    """Merge each consecutive frame pair via a per-pixel max ("lighten") blend so Atari's
-    every-other-frame sprite flicker disappears in the recording. A sprite drawn in either
-    of two consecutive frames stays visible at full brightness — the video analogue of the
-    max-pooling the training preprocessing already applies to the agent's observations.
+    """Replace each frame with the per-pixel max ("lighten") over a short sliding window of
+    consecutive frames, so Atari's sprite flicker disappears in the recording. A sprite
+    drawn in any frame of the window stays visible at full brightness — the video analogue
+    of the max-pooling the training preprocessing already applies to the agent's
+    observations.
+
+    Three chained tblend filters give a bounded 4-frame max window, which clears the
+    2-to-4-phase flicker heavier scenes produce (a single 2-frame blend was not enough)
+    while keeping motion trails to ~3 frames.
     """
     ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
     tmp = video_path.with_suffix(".deflicker.mp4")
+    lighten = "tblend=all_mode=lighten"
     subprocess.run(
         [
             ffmpeg,
@@ -66,7 +72,7 @@ def deflicker(video_path: Path) -> None:
             "-i",
             str(video_path),
             "-vf",
-            "tblend=all_mode=lighten",
+            f"{lighten},{lighten},{lighten}",
             "-pix_fmt",
             "yuv420p",
             str(tmp),
@@ -131,7 +137,7 @@ def main() -> None:
     parser.add_argument("--episodes", type=int, default=1)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--wandb", action="store_true", help="Upload the clip(s) to W&B")
-    parser.add_argument("--wandb-project", type=str, default="asteroids-rl")
+    parser.add_argument("--wandb-project", type=str, default="atari-rl")
     parser.add_argument(
         "--step", type=int, default=0, help="Training step label for the W&B video key"
     )

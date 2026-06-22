@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 from omegaconf import OmegaConf
 
-from asteroids_rl.train import ALGOS, linear_schedule
+from atari_rl.train import ALGOS, linear_schedule
 
 CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
 REQUIRED_KEYS = ["algo", "env_id", "policy", "hyperparams", "total_timesteps", "n_envs", "seed"]

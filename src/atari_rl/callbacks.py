@@ -6,7 +6,7 @@ from pathlib import Path
 
 from stable_baselines3.common.callbacks import CallbackList, CheckpointCallback, EvalCallback
 
-from asteroids_rl.env import make_env
+from atari_rl.env import make_env
 
 
 def build_callbacks(config: dict, run_name: str) -> CallbackList:
