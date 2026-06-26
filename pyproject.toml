@@ -1,7 +1,7 @@
 [project]
 name = "atari-rl"
 version = "0.1.0"
-description = "Train RL agents (PPO, DQN) on Atari games with a reproducible pipeline"
+description = "Train a PPO agent on Atari Space Invaders with a reproducible pipeline"
 requires-python = ">=3.10"
 dependencies = [
     "stable-baselines3[extra]>=2.3",

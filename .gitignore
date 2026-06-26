@@ -11,7 +11,7 @@ models/
 videos/
 wandb/
 runs/
-reports/*.png
+reports/
 
 # Hydra run metadata
 outputs/

@@ -2,7 +2,7 @@
 
 Usage:
     python -m atari_rl.train --config-name=ppo
-    python -m atari_rl.train --config-name=dqn total_timesteps=10000 wandb.enabled=false
+    python -m atari_rl.train --config-name=ppo total_timesteps=10000 wandb.enabled=false
 """
 
 from __future__ import annotations
@@ -12,12 +12,12 @@ from pathlib import Path
 
 import hydra
 from omegaconf import DictConfig, OmegaConf
-from stable_baselines3 import DQN, PPO
+from stable_baselines3 import PPO
 
 from atari_rl.callbacks import build_callbacks
 from atari_rl.env import make_env
 
-ALGOS = {"ppo": PPO, "dqn": DQN}
+ALGOS = {"ppo": PPO}
 
 
 def linear_schedule(initial: float):

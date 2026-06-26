@@ -15,7 +15,7 @@ CONFIGS_DIR = Path(__file__).resolve().parent.parent / "configs"
 REQUIRED_KEYS = ["algo", "env_id", "policy", "hyperparams", "total_timesteps", "n_envs", "seed"]
 
 
-@pytest.mark.parametrize("name", ["ppo", "dqn"])
+@pytest.mark.parametrize("name", ["ppo"])
 def test_config_has_required_keys(name):
     cfg = OmegaConf.load(CONFIGS_DIR / f"{name}.yaml")
     for key in REQUIRED_KEYS:

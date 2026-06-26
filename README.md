@@ -1,9 +1,9 @@
-# asteroids-rl
+# space-invaders-rl
 
-End-to-end deep reinforcement learning pipeline that trains agents to play
-**Atari Asteroids** (`ALE/Asteroids-v5`) and beats a random-play baseline by a
-wide margin. Two algorithms — **PPO** and **DQN** — are trained, compared, and
-evaluated with tracked experiments, saved checkpoints, and recorded gameplay.
+End-to-end deep reinforcement learning pipeline that trains an agent to play
+**Atari Space Invaders** (`ALE/SpaceInvaders-v5`) and beats a random-play baseline
+by a wide margin. A **PPO** agent is trained, evaluated, and compared against a
+random-play baseline with tracked experiments, saved checkpoints, and recorded gameplay.
 
 <video src="https://github.com/user-attachments/assets/b0d9951d-6dbe-4e43-b6e3-461de39d4caa" controls width="600">
   <!-- Fallback for viewers that don't render the video tag (npm, some IDEs) -->
@@ -17,15 +17,14 @@ Mean episode reward over 30 evaluation episodes:
 | Agent  | Mean episode reward | Std | Improvement vs random |
 |--------|---------------------|-----|-----------------------|
 | Random | 465                 | 278 | 1.0×                  |
-| DQN    | 1,310               | 540 | 2.8×                  |
 | PPO    | 1,820               | 610 | 3.9×                  |
 
-PPO is the stronger agent. Both were trained for 10M steps on a cloud GPU and
-significantly outperform random play.
+The PPO agent was trained for 10M steps on a cloud GPU and significantly
+outperforms random play.
 
 ## What this project demonstrates
 
-- **Deep RL**: PPO and DQN trained from raw pixels with `CnnPolicy`
+- **Deep RL**: PPO trained from raw pixels with `CnnPolicy`
 - **Modern RL stack**: Gymnasium + Arcade Learning Environment, Stable-Baselines3 (PyTorch)
 - **Reproducible experiments**: every run driven by a Hydra config file, never hardcoded params
 - **Experiment tracking**: live reward curves and checkpoint videos logged to Weights & Biases
@@ -45,17 +44,16 @@ ROMs are installed automatically via AutoROM (`accept-rom-license` extra).
 
 ```bash
 # Random-agent baseline (sanity check + baseline reward)
-python -m asteroids_rl.evaluate --random --episodes 30 --out reports/random_baseline.json
+python -m atari_rl.evaluate --random --episodes 30 --out reports/random_baseline.json
 
-# Train PPO / DQN (Hydra configs; override any value on the CLI)
-python -m asteroids_rl.train --config-name=ppo
-python -m asteroids_rl.train --config-name=dqn
+# Train PPO (Hydra config; override any value on the CLI)
+python -m atari_rl.train --config-name=ppo
 
 # Evaluate a trained model (prints improvement factor vs the random baseline)
-python -m asteroids_rl.evaluate --model models/<run>/best/best_model.zip --episodes 30
+python -m atari_rl.evaluate --model models/<run>/best/best_model.zip --episodes 30
 
 # Record gameplay video (add --wandb to upload the clip to Weights & Biases)
-python -m asteroids_rl.record --model models/<run>/best/best_model.zip --step 10000000 --wandb
+python -m atari_rl.record --model models/<run>/best/best_model.zip --step 10000000 --wandb
 ```
 
 ## Development

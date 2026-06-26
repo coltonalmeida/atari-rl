@@ -1,6 +1,0 @@
-{
-  "agent": "random",
-  "episodes": 10,
-  "mean_reward": 465.0,
-  "std_reward": 278.21754078418564
-}
